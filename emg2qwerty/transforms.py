@@ -7,6 +7,7 @@
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any, TypeVar
+from random import sample
 
 import numpy as np
 import torch
@@ -37,9 +38,15 @@ class ToTensor:
     stack_dim: int = 1
 
     def __call__(self, data: np.ndarray) -> torch.Tensor:
-        return torch.stack(
-            [torch.as_tensor(data[f]) for f in self.fields], dim=self.stack_dim
-        )
+        stck = torch.stack(
+          [torch.as_tensor(data[f]) for f in self.fields], dim=self.stack_dim
+      )
+      #CHOOSE 12 CHANNELS
+        num_channels = stck.shape[-1]  
+        channels_to_delete = sample(range(num_channels), 4)  
+        remaining_channels = [i for i in range(num_channels) if i not in channels_to_delete]
+        stck = stck[:, :, remaining_channels]
+        return stck
 
 
 @dataclass
@@ -243,3 +250,4 @@ class SpecAugment:
 
         # (..., C, freq, T) -> (T, ..., C, freq)
         return x.movedim(-1, 0)
+
