@@ -118,9 +118,9 @@ class RandomBandRotation:
     def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
         #### changing probabilities of rotation so that half are not rotated ###
         num = random.random()
-        if (num < 0.70):
+        if (num < 0.50):
           move = 0
-        elif (num < 0.85):
+        elif (num < 0.75):
           move = 1
         else:
           move = -1
