@@ -116,6 +116,15 @@ class RandomBandRotation:
     channel_dim: int = -1
 
     def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        #### changing probabilities of rotation so that half are not rotated ###
+        num = random.random()
+        if (num < 0.70):
+          move = 0
+        elif (num < 0.85):
+          move = 1
+        else:
+          move = -1
+        ################################################################
         offset = np.random.choice(self.offsets) if len(self.offsets) > 0 else 0
         return tensor.roll(offset, dims=self.channel_dim)
 
